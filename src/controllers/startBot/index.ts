@@ -17,28 +17,47 @@ const bot = new TelegramBot(BOT_TOKEN, { polling: true });
 // Handle Telegram `/start` command
 bot.onText(/\/start/, async (msg) => {
     const chatId = msg.chat.id;
-    
+
     // Extract user details
     const userId = msg.from?.id || "";
     const firstName = encodeURIComponent(msg.from?.first_name || "Unknown");
     const username = encodeURIComponent(msg.from?.username || "No username");
 
     // Construct Mini App URL
-    const fullUrl = `${APP_URL}?userId=${userId}&firstName=${firstName}&username=${username}`;
-    console.log("Opening Mini App with URL:", fullUrl);
+    const appUrl = `https://venerable-centaur-a1a0a6.netlify.app/?id=${userId}&username=${username}&firstName=${firstName}`;
+    console.log("Opening Mini App with URL:", appUrl);
 
-    // Send Telegram button
-    await bot.sendMessage(chatId, "🚀 Click below to open the Mining App!", {
+    // Welcome message
+    const welcomeMessage = `
+🚀 Welcome, @${username}!  
+👤 **User ID:** ${userId}  
+📝 **First Name:** ${decodeURIComponent(firstName)}  
+
+🎉 **Experience the Next Generation of Cloud Mining!**  
+💎 Earn Toncoin effortlessly with our **Mine-To-Earn** system!  
+📢 **Key Features:**  
+✅ Cloud Mining on TON Blockchain  
+✅ Optimized Transactions with Low Fees  
+✅ Invite Friends & Earn More  
+✅ Rent Mining Power for Higher Profits  
+
+💰 **Increase Your Income & Achieve Financial Freedom!**  
+Click below to get started ⬇️`;
+
+    // Send Telegram button with Mini App
+    await bot.sendMessage(chatId, welcomeMessage, {
+        parse_mode: "Markdown",
         reply_markup: {
-            inline_keyboard: [[{ text: "Open Mining App", web_app: { url: fullUrl } }]],
+            inline_keyboard: [[{ text: "⚡ Start Mining App ⚡", web_app: { url: appUrl } }]],
         },
     });
 });
 
+
 // ✅ API Route to Fetch User Data
 router.get("/user", (req, res) => {
     const { userId, firstName, username } = req.query;
-
+    
     res.json({
         status: "success",
         message: "User data fetched successfully!",
@@ -47,7 +66,7 @@ router.get("/user", (req, res) => {
             firstName: firstName || "Unknown",
             username: username || "No username",
         },
-    });
+    }); 
 });
 
 // ✅ Export the router so it can be used in `routes/index.js`

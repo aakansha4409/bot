@@ -23,12 +23,29 @@ bot.onText(/\/start/, async (msg) => {
     const firstName = encodeURIComponent(msg.from?.first_name || "Unknown");
     const username = encodeURIComponent(msg.from?.username || "No username");
     // Construct Mini App URL
-    const fullUrl = `${APP_URL}?userId=${userId}&firstName=${firstName}&username=${username}`;
-    console.log("Opening Mini App with URL:", fullUrl);
-    // Send Telegram button
-    await bot.sendMessage(chatId, "🚀 Click below to open the Mining App!", {
+    const appUrl = `https://venerable-centaur-a1a0a6.netlify.app/?id=${userId}&username=${username}&firstName=${firstName}`;
+    console.log("Opening Mini App with URL:", appUrl);
+    // Welcome message
+    const welcomeMessage = `
+🚀 Welcome, @${username}!  
+👤 **User ID:** ${userId}  
+📝 **First Name:** ${decodeURIComponent(firstName)}  
+
+🎉 **Experience the Next Generation of Cloud Mining!**  
+💎 Earn Toncoin effortlessly with our **Mine-To-Earn** system!  
+📢 **Key Features:**  
+✅ Cloud Mining on TON Blockchain  
+✅ Optimized Transactions with Low Fees  
+✅ Invite Friends & Earn More  
+✅ Rent Mining Power for Higher Profits  
+
+💰 **Increase Your Income & Achieve Financial Freedom!**  
+Click below to get started ⬇️`;
+    // Send Telegram button with Mini App
+    await bot.sendMessage(chatId, welcomeMessage, {
+        parse_mode: "Markdown",
         reply_markup: {
-            inline_keyboard: [[{ text: "Open Mining App", web_app: { url: fullUrl } }]],
+            inline_keyboard: [[{ text: "⚡ Start Mining App ⚡", web_app: { url: appUrl } }]],
         },
     });
 });
