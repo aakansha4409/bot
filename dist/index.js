@@ -8,9 +8,9 @@ dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const database_1 = __importDefault(require("./config/database"));
-const startBot_1 = __importDefault(require("./controllers/startBot")); // Import the bot file
+const error_1 = __importDefault(require("./middleware/error"));
+const routes_1 = __importDefault(require("./routes"));
 const app = (0, express_1.default)();
-const BOT_MODE = process.env.BOT_MODE || "polling"; // "polling" for local, "webhook" for production
 // ------------------------------------------------
 // Use middlewares
 // ------------------------------------------------
@@ -24,17 +24,13 @@ app.use(express_1.default.urlencoded({ extended: true, limit: "50mb" }));
 // ----------------------------------
 // Use routes
 // ----------------------------------
-app.use("/api", startBot_1.default);
-// ✅ Webhook-specific setup
-if (BOT_MODE === "webhook") {
-    app.use(express_1.default.json()); // Required for processing Telegram webhooks
-}
+app.use("/", routes_1.default);
 // ----------------------------------
 // Error handling
-// // ----------------------------------
-// app.use(errorHandlers.notFound);
-// app.use("/", errorHandlers.errors);
-// app.use("/", errorHandlers.server);
+// ----------------------------------
+app.use(error_1.default.notFound);
+app.use("/", error_1.default.errors);
+app.use("/", error_1.default.server);
 // --------------------------------------------------
 // Run server
 // --------------------------------------------------

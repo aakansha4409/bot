@@ -3,4 +3,3 @@
 // ------------------------------------------
 
 export { default as joi } from "./main";
-export { default as userJoi } from "./users/auth";

@@ -1,5 +1,6 @@
 import express, { Router } from "express";
-import botController from "../../controllers/startBot";
+import user  from "../../controllers/User";
+
 
 // --------------------------------------
 // Define the router
@@ -8,12 +9,11 @@ import botController from "../../controllers/startBot";
 const router: Router = express.Router();
 
 // ---------------------------------------
-// Start the bot
+// Get a user
 // ---------------------------------------
-
 router.get(
-    "/start",
-    botController.start
+    "/user",
+    user.get
 );
 
 // ----------------------

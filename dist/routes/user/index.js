@@ -4,15 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const startBot_1 = __importDefault(require("../../controllers/startBot"));
+const User_1 = __importDefault(require("../../controllers/User"));
 // --------------------------------------
 // Define the router
 // --------------------------------------
 const router = express_1.default.Router();
 // ---------------------------------------
-// Start the bot
+// Get a user
 // ---------------------------------------
-router.get("/start", startBot_1.default.start);
+router.get("/user", User_1.default.get);
 // ----------------------
 // Export router
 // ----------------------

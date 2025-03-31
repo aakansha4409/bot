@@ -3,8 +3,8 @@
 // ------------------------------------------------------
 
 import express, { Router } from "express";
-import auth from './auth';
-// import  startBot  from "../routes/startBot";
+import start_bot from './startBot';
+import user from './user';
 
 // --------------------------------------
 // Define the router
@@ -12,20 +12,17 @@ import auth from './auth';
 
 const router: Router = express.Router();
 
-// =======================================
-// Users routes
-// =======================================
+// ---------------------------------------
+// Start the bot
+// ---------------------------------------
 
-// ---------------------------
-// Auth routes
-// ---------------------------
-router.use('/', auth);
+router.use('/', start_bot);
 
+// ---------------------------------------
+// User routes
+// ---------------------------------------
 
-// ---------------------------
-// coins routes
-// ---------------------------
-// router.use('/', startBot);
+router.use('/', user);
 
 // ----------------------
 // Export router

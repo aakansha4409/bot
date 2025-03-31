@@ -4,10 +4,9 @@ import express from "express";
 import cors from "cors";
 import database from "./config/database";
 import errorHandlers from "./middleware/error";
-import userRoutes from "./controllers/startBot"; // Import the bot file
+import routes from "./routes"; 
 
 const app = express();
-const BOT_MODE = process.env.BOT_MODE || "polling"; // "polling" for local, "webhook" for production
 
 // ------------------------------------------------
 // Use middlewares
@@ -24,19 +23,15 @@ database();
 // ----------------------------------
 // Use routes
 // ----------------------------------
-app.use("/api", userRoutes);
+app.use("/", routes);
 
-// ✅ Webhook-specific setup
-if (BOT_MODE === "webhook") {
-    app.use(express.json()); // Required for processing Telegram webhooks
-}
 
 // ----------------------------------
 // Error handling
-// // ----------------------------------
-// app.use(errorHandlers.notFound);
-// app.use("/", errorHandlers.errors);
-// app.use("/", errorHandlers.server);
+// ----------------------------------
+app.use(errorHandlers.notFound);
+app.use("/", errorHandlers.errors);
+app.use("/", errorHandlers.server);
 
 // --------------------------------------------------
 // Run server
