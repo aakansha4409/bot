@@ -28,89 +28,65 @@ function generateReferralCode() {
 // ------------------------------------------------------
 // Start bot
 // ------------------------------------------------------
+// /start command (Normal User, no referral)
 bot.onText(/\/start/, async (msg) => {
     const chat_id = msg.chat.id;
-
     const user_id = msg.from?.id || "";
     const first_name = encodeURIComponent(msg.from?.first_name || "Unknown");
     const language_code = encodeURIComponent(msg.from?.language_code || "Unknown");
     const username = encodeURIComponent(msg.from?.username || "No username");
 
-    const app_url = `https://venerable-centaur-a1a0a6.netlify.app/?id=${user_id}&username=${username}&first_name=${first_name}`;
-
+    console.log(username," ",first_name," ",language_code," ",user_id);
     const user: UserDocument | null = await User.findOne({
         telegram_id: user_id,
         isDeleted: false,
     });
 
     if (!user) {
-        // Generate unique referral code
+        // New user, generate referral code and welcome message
         const invitationCode = generateReferralCode();
-
-        // Store user in the database
         await User.create({
             username,
             first_name,
             language_code,
             telegram_id: user_id,
-            invitationCode, // Store the generated referral code
+            invitationCode, // Store referral code
         });
 
-        // Send welcome message and referral link
+        // Send welcome message
         const welcome_message = `
-🚀 Welcome, @${username}!  
-👤 **User ID:** ${user_id}  
-📝 **First Name:** ${decodeURIComponent(first_name)}  
-
-🎉 **Experience the Next Generation of Cloud Mining!**  
-💎 Earn Toncoin effortlessly with our **Mine-To-Earn** system!  
-📢 **Key Features:**  
-✅ Cloud Mining on TON Blockchain  
-✅ Optimized Transactions with Low Fees  
-✅ Invite Friends & Earn More  
-✅ Rent Mining Power for Higher Profits  
-
-💰 **Increase Your Income & Achieve Financial Freedom!**  
-Click below to get started ⬇️
-
-🔗 **Your Referral Link:**  
-https://venerable-centaur-a1a0a6.netlify.app/?ref=${invitationCode}  // Referral link for the user
+🚀 Welcome, @${username}!
+... (message content)
 `;
 
-        // Send Telegram button with Mini App
-        await bot.sendMessage(chat_id, welcome_message, {
-            parse_mode: "Markdown",
-            reply_markup: {
-                inline_keyboard: [[{ text: "⚡ Start Mining App ⚡", web_app: { url: app_url } }]],
-            },
-        });
+        // Send the Telegram message
+        await bot.sendMessage(chat_id, welcome_message);
     } else {
-        // If the user already exists, send a different message
+        // Existing user, send a welcome back message
         await bot.sendMessage(chat_id, "Welcome back! Use your referral link to invite others!");
     }
 });
 
+
 // ------------------------------------------------------
 // Handle user referral during registration
 // ------------------------------------------------------
+// /start <referral_code> (User with referral link)
 bot.onText(/\/start (.+)/, async (msg, match) => {
     const chat_id = msg.chat.id;
     const user_id = msg.from?.id || "";
-    const referralCode = match?.[1]; // The referral code passed in the URL
+    const referralCode = match?.[1]; // Capture referral code from the message
 
     const referrer: UserDocument | null = await User.findOne({
-        referralCode,
+        referralCode, // Find the user with the given referral code
         isDeleted: false,
     });
 
     if (referrer) {
-        // The user is coming from a referral link
-
+        // Referrer found, this user came via a referral link
         const first_name = encodeURIComponent(msg.from?.first_name || "Unknown");
         const username = encodeURIComponent(msg.from?.username || "No username");
         const language_code = encodeURIComponent(msg.from?.language_code || "Unknown");
-
-        const app_url = `https://venerable-centaur-a1a0a6.netlify.app/?id=${user_id}&username=${username}&first_name=${first_name}`;
 
         const user: UserDocument | null = await User.findOne({
             telegram_id: user_id,
@@ -118,55 +94,34 @@ bot.onText(/\/start (.+)/, async (msg, match) => {
         });
 
         if (!user) {
-            // Create a new user
-            const referralCode = generateReferralCode();
-
+            // Create a new user and assign them a referral code
+            const newReferralCode = generateReferralCode();
             const newUser = await User.create({
                 username,
                 first_name,
                 language_code,
                 telegram_id: user_id,
-                referralCode, // Store referral code for the new user
+                referralCode: newReferralCode, // Store referral code for the new user
                 referrerId: referrer._id, // Store who referred the new user
             });
 
-            // Update the referrer's referral hierarchy
-            referrer.referrals.push(newUser._id); // Add the new user to the referrer's referral list
-            await referrer.save(); // Save the referrer with updated referrals
+            // Update referrer's referral list
+            referrer.referrals.push(newUser._id);
+            await referrer.save();
 
-            // Send welcome message with referral link
+            // Send welcome message
             const welcome_message = `
-🚀 Welcome, @${username}!  
-👤 **User ID:** ${user_id}  
-📝 **First Name:** ${decodeURIComponent(first_name)}  
-
-🎉 **Experience the Next Generation of Cloud Mining!**  
-💎 Earn Toncoin effortlessly with our **Mine-To-Earn** system!  
-📢 **Key Features:**  
-✅ Cloud Mining on TON Blockchain  
-✅ Optimized Transactions with Low Fees  
-✅ Invite Friends & Earn More  
-✅ Rent Mining Power for Higher Profits  
-
-💰 **Increase Your Income & Achieve Financial Freedom!**  
-Click below to get started ⬇️
-
-🔗 **Your Referral Link:**  
-https://venerable-centaur-a1a0a6.netlify.app/?ref=${referralCode}  // Referral link for the user
+🚀 Welcome, @${username}!
+... (message content)
 `;
 
-            // Send Telegram button with Mini App
-            await bot.sendMessage(chat_id, welcome_message, {
-                parse_mode: "Markdown",
-                reply_markup: {
-                    inline_keyboard: [[{ text: "⚡ Start Mining App ⚡", web_app: { url: app_url } }]],
-                },
-            });
+            await bot.sendMessage(chat_id, welcome_message);
         }
     } else {
-        // If referral code is not found
+        // Invalid referral code
         await bot.sendMessage(chat_id, "Sorry, invalid referral code.");
     }
 });
+
 
 export default router;
