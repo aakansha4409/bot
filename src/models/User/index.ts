@@ -27,7 +27,9 @@ const schema: Schema<UserDocument> = new Schema(
         invitationCode: {
             type: String,
             required: true, // Every user must have a referral code
-            unique: true, // Ensure referral code is unique
+            unique: true,
+            default: "", // Default value for referral code
+             // Ensure referral code is unique
         },
         referrerId: {
             type: mongoose.Schema.Types.ObjectId,
