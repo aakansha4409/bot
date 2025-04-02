@@ -3,7 +3,6 @@
 // ------------------------------------------------------
 
 import express, { Router } from "express";
-import start_bot from './startBot';
 import user from './user';
 
 // --------------------------------------
@@ -11,12 +10,6 @@ import user from './user';
 // --------------------------------------
 
 const router: Router = express.Router();
-
-// ---------------------------------------
-// Start the bot
-// ---------------------------------------
-
-router.use('/', start_bot);
 
 // ---------------------------------------
 // User routes

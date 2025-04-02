@@ -1,6 +1,5 @@
 import { Response } from "express";
 import { CustomRequest } from "../../config/types";
-import TelegramBot from "node-telegram-bot-api";
 
 // ---------------------------------------------------------------
 // Define interface

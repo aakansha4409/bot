@@ -10,6 +10,7 @@ const cors_1 = __importDefault(require("cors"));
 const database_1 = __importDefault(require("./config/database"));
 const error_1 = __importDefault(require("./middleware/error"));
 const routes_1 = __importDefault(require("./routes"));
+const startBot_1 = __importDefault(require("./controllers/startBot"));
 const app = (0, express_1.default)();
 // ------------------------------------------------
 // Use middlewares
@@ -25,6 +26,10 @@ app.use(express_1.default.urlencoded({ extended: true, limit: "50mb" }));
 // Use routes
 // ----------------------------------
 app.use("/", routes_1.default);
+// ----------------------------------
+// Start bot
+// ----------------------------------
+app.use("/", startBot_1.default);
 // ----------------------------------
 // Error handling
 // ----------------------------------

@@ -5,9 +5,9 @@ import cors from "cors";
 import database from "./config/database";
 import errorHandlers from "./middleware/error";
 import routes from "./routes"; 
+import bot from "./controllers/startBot"
 
 const app = express();
-
 // ------------------------------------------------
 // Use middlewares
 // ------------------------------------------------
@@ -25,7 +25,11 @@ database();
 // ----------------------------------
 app.use("/", routes);
 
+// ----------------------------------
+// Start bot
+// ----------------------------------
 
+app.use("/", bot);
 // ----------------------------------
 // Error handling
 // ----------------------------------
