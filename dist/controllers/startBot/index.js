@@ -26,35 +26,47 @@ bot.onText(/\/start/, async (msg) => {
     const first_name = encodeURIComponent(msg.from?.first_name || "Unknown");
     const language_code = encodeURIComponent(msg.from?.language_code || "Unknown");
     const username = encodeURIComponent(msg.from?.username || "No username");
+    const invitationLink = encodeURIComponent(msg?.from?.invitationLink || "No invitationLink");
     const app_url = `https://venerable-centaur-a1a0a6.netlify.app/?id=${user_id}&username=${username}&first_name=${first_name}`;
     const user = await User_1.default.findOne({
         telegram_id: user_id,
         isDeleted: false,
     });
+    const generateReferralCode = (user_id) => {
+        return `REF-${user_id.toString().slice(-6)}`;
+    };
     if (!user) {
-        await User_1.default.create({
-            username,
-            first_name,
-            language_code,
-            telegram_id: user_id,
-        });
+        try {
+            const referralCode = generateReferralCode(user_id);
+            const invitationLink = ` https://t.me/DexMiningbot?start=${referralCode}`;
+            const newUser = await User_1.default.create({
+                username,
+                first_name,
+                language_code,
+                telegram_id: user_id,
+                invitationLink,
+            });
+        }
+        catch (error) {
+            console.error(`Error Creating User : ${error.message}`);
+        }
     }
     // Welcome message for users
     const welcome_message = `
-    🚀 Welcome, @${username}!  
-    👤 **User ID:** ${user_id}  
-    📝 **First Name:** ${decodeURIComponent(first_name)}  
-
-    🎉 **Experience the Next Generation of Cloud Mining!**  
-    💎 Earn Toncoin effortlessly with our **Mine-To-Earn** system!  
-    📢 **Key Features:**  
-    ✅ Cloud Mining on TON Blockchain  
-    ✅ Optimized Transactions with Low Fees  
-    ✅ Invite Friends & Earn More  
-    ✅ Rent Mining Power for Higher Profits  
-
-    💰 **Increase Your Income & Achieve Financial Freedom!**  
-    Click below to get started ⬇️`;
+🚀 Welcome, @${username}!  
+👤 **User ID:** ${user_id}  
+📝 **First Name:** ${decodeURIComponent(first_name)}  
+ 
+🎉 **Experience the Next Generation of Cloud Mining!**  
+💎 Earn Toncoin effortlessly with our **Mine-To-Earn** system!  
+📢 **Key Features:**  
+✅ Cloud Mining on TON Blockchain  
+✅ Optimized Transactions with Low Fees  
+✅ Invite Friends & Earn More  
+✅ Rent Mining Power for Higher Profits  
+ 
+💰 **Increase Your Income & Achieve Financial Freedom!**  
+Click below to get started ⬇️`;
     // Send Telegram button with Mini App
     await bot.sendMessage(chat_id, welcome_message, {
         parse_mode: "Markdown",

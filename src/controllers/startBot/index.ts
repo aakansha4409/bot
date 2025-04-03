@@ -41,7 +41,7 @@ const generateReferralCode = (user_id: number): string => {
     if (!user) {
         try {
             const referralCode = generateReferralCode(user_id as number)
-            const invitationLink = `https://yourapp.com/signup?ref=${referralCode}`;
+            const invitationLink =` https://t.me/DexMiningbot?start=${referralCode}`;
             const newUser = await User.create({
                 username,
                 first_name,

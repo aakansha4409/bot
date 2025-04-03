@@ -13,11 +13,12 @@ const controller = {
     // -------------------------------------------------------
     get: async (req, res) => {
         try {
-            const { userId, firstName, username } = req.query;
+            const { userId, firstName, username, invitationLink } = req.query;
             const data = {
                 userId: userId || "Unknown",
                 firstName: firstName || "Unknown",
                 username: username || "No username",
+                invitationLink: invitationLink || "No invitation link",
             };
             const message = "User data fetched successfully";
             return response_1.default.success(res, data, message);

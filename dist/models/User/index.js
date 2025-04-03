@@ -30,50 +30,30 @@ const mongoose_1 = __importStar(require("mongoose"));
 const schema = new mongoose_1.Schema({
     username: {
         type: String,
-        required: true, // Make this field required
     },
     first_name: {
         type: String,
-        required: true, // Make this field required
     },
     language_code: {
         type: String,
-        required: true, // Make this field required
     },
     telegram_id: {
         type: String,
-        required: true, // Make this field required
-        unique: true, // Ensure telegram_id is unique
+        required: true
     },
-    // invitationCode: {
-    //     type: String,
-    //     unique: true,
-    //     default: "", // Default value for referral code
-    //      // Ensure referral code is unique
-    // },
-    // referrerId: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'users', // Reference to the User model (the person who referred the user)
-    //     default: null, // Null if the user was not referred by anyone
-    // },
-    // referrals: [
-    //     {
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: 'users', // References to the users who were referred by this user
-    //     },
-    // ],
     isDeleted: {
         type: Boolean,
-        default: false, // Default value for deleted status
+        default: false
     },
+    invitationLink: { type: String, unique: true, default: "" },
 }, {
-    timestamps: true, // Automatically add createdAt and updatedAt fields
+    timestamps: true,
 });
 // ---------------------------------------------------------------
 // Define and export user model
 // ---------------------------------------------------------------
-const Users = mongoose_1.default.model('users', schema);
+const User = mongoose_1.default.model('User', schema);
 // ----------------------------
 // Export Users Model
 // ----------------------------
-exports.default = Users;
+exports.default = User;
