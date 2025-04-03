@@ -10,9 +10,9 @@ interface UserDocument extends Document {
     first_name: string;
     language_code: string;
     telegram_id: string;
-    invitationCode: string; // Add referralCode to store each user's unique referral code
-    referrerId?: mongoose.Schema.Types.ObjectId | null; // Referrer is an optional field (if user was referred)
-    referrals: mongoose.Schema.Types.ObjectId[]; // Array of users who were referred by this user
+    // invitationCode: string; // Add referralCode to store each user's unique referral code
+    // referrerId?: mongoose.Schema.Types.ObjectId | null; // Referrer is an optional field (if user was referred)
+    // referrals: mongoose.Schema.Types.ObjectId[]; // Array of users who were referred by this user
     isDeleted?: boolean; // Optional, default to false
 }
 

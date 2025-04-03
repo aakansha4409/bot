@@ -24,23 +24,23 @@ const schema: Schema<UserDocument> = new Schema(
             required: true, // Make this field required
             unique: true, // Ensure telegram_id is unique
         },
-        invitationCode: {
-            type: String,
-            unique: true,
-            default: "", // Default value for referral code
-             // Ensure referral code is unique
-        },
-        referrerId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'users', // Reference to the User model (the person who referred the user)
-            default: null, // Null if the user was not referred by anyone
-        },
-        referrals: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'users', // References to the users who were referred by this user
-            },
-        ],
+        // invitationCode: {
+        //     type: String,
+        //     unique: true,
+        //     default: "", // Default value for referral code
+        //      // Ensure referral code is unique
+        // },
+        // referrerId: {
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     ref: 'users', // Reference to the User model (the person who referred the user)
+        //     default: null, // Null if the user was not referred by anyone
+        // },
+        // referrals: [
+        //     {
+        //         type: mongoose.Schema.Types.ObjectId,
+        //         ref: 'users', // References to the users who were referred by this user
+        //     },
+        // ],
         isDeleted: {
             type: Boolean,
             default: false, // Default value for deleted status
