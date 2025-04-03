@@ -47,7 +47,7 @@ const generateReferralCode = (user_id: number): string => {
                 first_name,
                 language_code,
                 telegram_id: user_id,
-                invitationLink,
+                invitationLink:invitationLink,
             });
         } catch (error) {
             console.error(`Error Creating User : ${(error as Error).message}`)

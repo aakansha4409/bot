@@ -11,7 +11,7 @@ interface UserDocument extends Document {
     language_code: string;
     telegram_id: string;
     isDeleted?: boolean;
-    invitationLink:String
+    invitationLink:string
 }
  
 // ---------------------------

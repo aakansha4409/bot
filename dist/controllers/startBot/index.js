@@ -44,7 +44,7 @@ bot.onText(/\/start/, async (msg) => {
                 first_name,
                 language_code,
                 telegram_id: user_id,
-                invitationLink,
+                invitationLink: invitationLink,
             });
         }
         catch (error) {
